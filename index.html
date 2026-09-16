@@ -35,7 +35,7 @@ body{
 }
 .wrap{max-width:1120px; margin:0 auto; padding:28px 20px 64px}
 header h1{font-size:1.65rem; font-weight:700; margin:0 0 4px; letter-spacing:-.01em}
-header .sottotesto{font-size:1.02rem; font-weight:600; color:var(--corallo); margin:0 0 8px}
+header .sottotesto{font-size:1.02rem; font-weight:600; color:var(--corallo); margin:0}
 header p{margin:0; color:var(--testo2); max-width:62ch}
 .rule{height:3px; width:44px; background:var(--giallo); border-radius:2px; margin:0 0 18px}
 
@@ -147,7 +147,6 @@ footer{margin-top:34px; padding-top:16px; border-top:1px solid var(--bordo); fon
   <div class="rule"></div>
   <h1>Visual Prompt Generator</h1>
   <p class="sottotesto">Cinque passaggi per creare un buon prompt visivo</p>
-  <p>In ciascun passaggio scegli fra le opzioni oppure scrivi la tua descrizione nel campo libero. Il prompt si compone da solo mentre procedi.</p>
 </header>
 
 <div class="steps" id="steps" role="tablist"></div>
@@ -379,7 +378,7 @@ function render(){
   const card = document.getElementById("card");
   card.innerHTML = '<div class="card-head"><img src="'+ICONE[stato.passo]+'" alt=""><div>'
     + '<p class="kicker">Passo '+(stato.passo+1)+' di '+DATI.length+'</p>'
-    + '<h2>'+sez.nome+'</h2><p>'+sez.desc+'</p></div></div>';
+    + '<h2>'+sez.nome+'</h2></div></div>';
 
   sez.gruppi.forEach(g=>{
     const opts = gruppoOpts(g);
