@@ -353,10 +353,10 @@ function componi(lang){
   const st  = unisci([f("registro"), f("resa"), f("realismo")]);    if(st)  frasi.push(st);
   const lu  = unisci([f("luce"), f("dominante"), f("atmosfera")]);  if(lu)  frasi.push(lu);
   const fo  = unisci([f("proporzioni"), f("destinazione"), f("leggibilita")]); if(fo) frasi.push(fo);
-  if(!frasi.length) return "";
-  frasi.push(lang==="it"
+  if(stato.noTesto) frasi.push(lang==="it"
     ? "Nessun testo, nessuna scritta e nessuna didascalia dentro l'immagine"
     : "No text, lettering or captions inside the image");
+  if(!frasi.length) return "";
   return frasi.map((x,i)=> i===0 ? x.charAt(0).toUpperCase()+x.slice(1) : x).join(". ") + ".";
 }
 
@@ -407,7 +407,8 @@ function render(){
     f.innerHTML = '<h4>Regole fisse</h4><ul>'
       + '<li>Nessun testo dentro l\'immagine: etichette e didascalie si aggiungono dopo.</li>'
       + '<li>Nessun nome di persona reale e nessun nome di autore vivente.</li>'
-      + '<li>Nessun riferimento a un film o a una serie da cui prendere le sembianze.</li></ul>';
+      + '<li>Nessun riferimento a un film o a una serie da cui prendere le sembianze.</li></ul>'
+      + '<div class="chips" style="margin:12px 0 0"><button class="chip" id="noTesto" aria-pressed="'+(!!stato.noTesto)+'">Aggiungi al prompt: nessun testo dentro l\'immagine</button></div>';
     card.appendChild(f);
     const fine = document.createElement("div");
     fine.className = "finito";
@@ -424,7 +425,9 @@ function render(){
     + (ultimo ? "Vedi il prompt" : "Passo "+(stato.passo+2)+": "+DATI[stato.passo+1].nome) + '</button>';
   card.appendChild(nav);
 
-  card.querySelectorAll(".chip").forEach(b=> b.onclick = ()=> toggle(b.dataset.g, b.dataset.l, b.dataset.m==="1"));
+  card.querySelectorAll(".chip[data-g]").forEach(b=> b.onclick = ()=> toggle(b.dataset.g, b.dataset.l, b.dataset.m==="1"));
+  const nt = document.getElementById("noTesto");
+  if(nt) nt.onclick = ()=>{ stato.noTesto = !stato.noTesto; salva(); render(); };
   card.querySelectorAll("input[data-lib]").forEach(inp=>{
     inp.oninput = ()=>{ stato.libero[inp.dataset.lib] = inp.value; salva(); aggiornaOut(); };
   });
@@ -464,7 +467,7 @@ document.getElementById("copia").onclick = async ()=>{
   setTimeout(()=> b.textContent="Copia", 1600);
 };
 document.getElementById("azzera").onclick = ()=>{
-  stato = {passo:0, lang:stato.lang, sel:{}, libero:{}};
+  stato = {passo:0, lang:stato.lang, sel:{}, libero:{}, noTesto:false};
   try{ localStorage.removeItem(CHIAVE); }catch(e){}
   render();
 };
