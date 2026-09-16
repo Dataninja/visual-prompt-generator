@@ -138,7 +138,16 @@ input[type=text]:focus{outline:none; border-color:var(--corallo)}
 .pact{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap}
 .mancanti{margin-top:12px; font-size:.8rem; color:var(--testo2)}
 .mancanti b{color:var(--corallo)}
+.verifica{margin-top:14px; padding:13px 15px; border-radius:12px; background:var(--pannello);
+  border:1.5px solid var(--bordo); border-left:4px solid var(--corallo)}
+.verifica h3{margin:0 0 7px; font-size:.74rem; font-weight:700; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--corallo)}
+.verifica ul{margin:0; padding-left:17px; font-size:.83rem; line-height:1.45; color:var(--testo2)}
+.verifica li+li{margin-top:5px}
+.verifica li b{color:var(--testo); font-weight:600}
 footer{margin-top:34px; padding-top:16px; border-top:1px solid var(--bordo); font-size:.78rem; color:var(--testo2)}
+footer a{color:var(--corallo); font-weight:600; text-decoration:none; border-bottom:1px solid currentColor}
+footer a:hover{filter:brightness(1.1)}
 </style>
 </head>
 <body>
@@ -167,10 +176,11 @@ footer{margin-top:34px; padding-top:16px; border-top:1px solid var(--bordo); fon
       <button class="btn btn-s" id="azzera">Ricomincia</button>
     </div>
     <div class="mancanti" id="mancanti"></div>
+    <div id="verifica"></div>
   </aside>
 </div>
 
-<footer>Open the Box, un progetto di dataninja. Strumento didattico: il prompt prodotto va sempre riletto prima di essere usato, e l'immagine generata va verificata prima di portarla in aula.</footer>
+<footer>Open the Box è un progetto di Dataninja. Più info su <a href="https://openthebox.io/" target="_blank" rel="noopener">www.openthebox.io</a></footer>
 </div>
 
 <script>
@@ -211,11 +221,9 @@ const DATI = [
     {l:"Medioevo", it:"ambientato nel medioevo", en:"set in the Middle Ages"},
     {l:"Antichità", it:"ambientato nell'antichità", en:"set in antiquity"},
     {l:"Senza epoca", it:"senza riferimenti temporali riconoscibili", en:"with no recognisable period markers"}]},
-  {id:"dettaglio", nome:"Livello di dettaglio", multi:true, ph:"oppure elenca tu i dettagli che contano", opts:[
-    {l:"Materiali e superfici", it:"materiali e superfici ben visibili", en:"clearly visible materials and surfaces"},
-    {l:"Segni d'uso", it:"segni d'uso e di usura", en:"signs of wear and use"},
-    {l:"Contesto attorno", it:"elementi di contesto attorno al soggetto", en:"contextual elements around the subject"},
-    {l:"Essenziale", it:"senza dettagli superflui", en:"no superfluous detail"}]}
+  {id:"dettaglio", nome:"Livello di dettaglio", multi:true,
+   sug:"Che cosa deve essere visibile nell'immagine, e con quanta precisione. Scrivilo tu.",
+   ph:"per esempio: materiali e superfici ben visibili, segni d'uso, l'ambiente attorno", opts:[]}
 ]},
 {id:"inquadratura", nome:"Inquadratura", desc:"Distanza, punto di vista, che cosa entra nel campo.", gruppi:[
   {id:"distanza", nome:"Distanza", multi:false, ph:"oppure descrivi tu la distanza", opts:[
@@ -386,8 +394,8 @@ function render(){
     d.className = "group";
     let html = "<h3>"+g.nome+"</h3>";
     if(g.dinamico && !opts.length) html += '<p class="hint">Scegli prima un registro visivo: le opzioni di resa cambiano fra fotografia e illustrazione.</p>';
-    else html += '<p class="hint">'+(g.multi ? "Puoi sceglierne più di una." : "Scegline una.")+'</p>';
-    html += '<div class="chips">';
+    else html += '<p class="hint">'+(g.sug || (g.multi ? "Puoi sceglierne più di una." : "Scegline una."))+'</p>';
+    if(opts.length) html += '<div class="chips">';
     let motivi = [];
     opts.forEach(o=>{
       const on = (stato.sel[g.id]||[]).includes(o.l);
@@ -395,7 +403,7 @@ function render(){
       if(bl && !motivi.includes(bl)) motivi.push(bl);
       html += '<button class="chip" aria-pressed="'+on+'"'+(bl?' disabled title="'+bl+'"':'')+' data-g="'+g.id+'" data-l="'+o.l.replace(/"/g,'&quot;')+'" data-m="'+(g.multi?1:0)+'">'+o.l+'</button>';
     });
-    html += "</div>";
+    if(opts.length) html += "</div>";
     if(g.ph!=="" || true) html += '<input type="text" data-lib="'+g.id+'" placeholder="'+(g.ph||"oppure scrivi tu")+'" value="'+((stato.libero[g.id]||"").replace(/"/g,'&quot;'))+'">';
     if(motivi.length) html += '<p class="warn">'+motivi.join(" ")+'</p>';
     d.innerHTML = html;
@@ -457,6 +465,12 @@ function aggiornaOut(){
   document.getElementById("mancanti").innerHTML = mancano.length
     ? "Non hai ancora indicato: <b>"+mancano.join(", ")+"</b>. Quello che non specifichi lo sceglie il modello al posto tuo."
     : "Tutte e cinque le variabili sono indicate.";
+  document.getElementById("verifica").innerHTML = mancano.length ? "" :
+    '<div class="verifica"><h3>Controlla il risultato</h3><ul>'
+    + '<li><b>Ci sono stereotipi?</b> Guarda che aspetto, genere, età e provenienza il modello ha dato per scontati senza che tu li avessi chiesti.</li>'
+    + '<li><b>Ci sono dettagli sbagliati?</b> Mani, scritte, oggetti fuori epoca, numeri, proporzioni: sono i punti in cui i modelli sbagliano più spesso.</li>'
+    + '<li><b>Dichiara che è stata creata con l\'IA.</b> È un atto di trasparenza verso chi la guarderà.</li>'
+    + '</ul></div>';
 }
 
 document.querySelectorAll(".tab").forEach(t=> t.onclick = ()=>{ stato.lang=t.dataset.lang; salva(); render(); });
