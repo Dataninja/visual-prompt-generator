@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Compositore di prompt visivi</title>
+<title>Visual Prompt Generator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -34,7 +34,8 @@ body{
   font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
 }
 .wrap{max-width:1120px; margin:0 auto; padding:28px 20px 64px}
-header h1{font-size:1.65rem; font-weight:700; margin:0 0 6px; letter-spacing:-.01em}
+header h1{font-size:1.65rem; font-weight:700; margin:0 0 4px; letter-spacing:-.01em}
+header .sottotesto{font-size:1.02rem; font-weight:600; color:var(--corallo); margin:0 0 8px}
 header p{margin:0; color:var(--testo2); max-width:62ch}
 .rule{height:3px; width:44px; background:var(--giallo); border-radius:2px; margin:0 0 18px}
 
@@ -144,8 +145,9 @@ footer{margin-top:34px; padding-top:16px; border-top:1px solid var(--bordo); fon
 <div class="wrap">
 <header>
   <div class="rule"></div>
-  <h1>Compositore di prompt visivi</h1>
-  <p>Un prompt visivo fatto bene si costruisce in <b>cinque passaggi</b>, uno per variabile. In ciascuno scegli fra le opzioni oppure scrivi la tua descrizione nel campo libero. Il prompt si compone da solo mentre procedi.</p>
+  <h1>Visual Prompt Generator</h1>
+  <p class="sottotesto">Cinque passaggi per creare un buon prompt visivo</p>
+  <p>In ciascun passaggio scegli fra le opzioni oppure scrivi la tua descrizione nel campo libero. Il prompt si compone da solo mentre procedi.</p>
 </header>
 
 <div class="steps" id="steps" role="tablist"></div>
